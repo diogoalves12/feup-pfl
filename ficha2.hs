@@ -113,3 +113,11 @@ myindex xs n = head [x | (i,x) <- zip [0..] xs, i == n]
 
 -- EX13
 
+fact :: Integer -> Integer
+fact n = product [1..n]
+
+binom :: Integer -> Integer -> Integer
+binom n k = fact n `div` (fact k * fact (n-k))
+
+pascal :: Integer -> [[Integer]]
+pascal n = [[binom r k | k <- [0..r]] | r <- [0..n]]
