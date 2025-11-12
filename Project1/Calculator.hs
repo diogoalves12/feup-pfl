@@ -1,4 +1,3 @@
-
 {-
   A basic calculator for arithmetic expressions
   Based on the example in Chapter 8 of "Programming in Haskell"
@@ -18,8 +17,11 @@ import Data.Char
 data Expr = Num Integer
           | Add Expr Expr
           | Mul Expr Expr
+          -- [Part 1]: subtraction
           | Sub Expr Expr
+          -- [Part 1]: integer division
           | Div Expr Expr
+          -- [Part 1]: remainder (rem)
           | Rem Expr Expr
           deriving Show
 
@@ -29,6 +31,7 @@ eval :: Expr -> Integer
 eval (Num n) = n
 eval (Add e1 e2) = eval e1 + eval e2
 eval (Mul e1 e2) = eval e1 * eval e2
+-- [Part 1]: new cases for evaluating the new operators
 eval (Sub e1 e2) = eval e1 - eval e2
 eval (Div e1 e2) = eval e1 `div` eval e2
 eval (Rem e1 e2) = eval e1 `rem` eval e2
@@ -38,9 +41,11 @@ eval (Rem e1 e2) = eval e1 `rem` eval e2
 --
 -- expr ::= term exprCont
 -- exprCont ::= '+' term exprCont | epsilon
+-- [Part 1]: accepts '-'
 
 -- term ::= factor termCont
 -- termCont ::= '*' factor termCont | epsilon
+-- [Part 1]: accepts '/' and '%'
 
 -- factor ::= natural | '(' expr ')'
 
@@ -53,6 +58,7 @@ exprCont acc =
       do char '+'
          t <- term
          exprCont (Add acc t)
+  -- [Part 1]: new case for '-'
   <|> do char '-'
          t <- term
          exprCont (Sub acc t)
@@ -68,9 +74,11 @@ termCont acc =
       do char '*'
          f <- factor
          termCont (Mul acc f)
+  -- [Part 1]: new case for '/'
   <|> do char '/'
          f <- factor
          termCont (Div acc f)
+  -- [Part 1]: new case for '%'
   <|> do char '%'
          f <- factor
          termCont (Rem acc f)
